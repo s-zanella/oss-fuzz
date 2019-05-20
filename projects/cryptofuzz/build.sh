@@ -100,10 +100,6 @@ fi
 if [[ $CFLAGS != *sanitize=memory* ]]
 then
     # Compile EverCrypt (with assembly)
-    cd $SRC/
-    tar zxvf hacl-star-evercrypt-v0.1alpha1-bugfix.tar.gz
-    mv hacl-star-evercrypt-v0.1alpha1 evercrypt
-
     cd $SRC/evercrypt/dist/generic
     make -j$(nproc) || true
 
@@ -248,14 +244,14 @@ then
 fi
 
 ##############################################################################
-# Compile BoringSSL (with assembly)
+# Compile BoringSSL (without assembly)
 cd $SRC/boringssl
 rm -rf build ; mkdir build
 cd build
 cmake -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_C_FLAGS="$CFLAGS" -DBORINGSSL_ALLOW_CXX_RUNTIME=1 -DOPENSSL_NO_ASM=1 ..
 make -j$(nproc) crypto
 
-# Compile Cryptofuzz BoringSSL (with assembly) module
+# Compile Cryptofuzz BoringSSL (without assembly) module
 cd $SRC/cryptofuzz/modules/openssl
 OPENSSL_INCLUDE_PATH="$SRC/boringssl/include" OPENSSL_LIBCRYPTO_A_PATH="$SRC/boringssl/build/crypto/libcrypto.a" CXXFLAGS="$CXXFLAGS -DCRYPTOFUZZ_BORINGSSL" make -B
 
