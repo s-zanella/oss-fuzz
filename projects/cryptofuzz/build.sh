@@ -100,11 +100,11 @@ fi
 if [[ $CFLAGS != *sanitize=memory* ]]
 then
     # Compile EverCrypt (with assembly)
-    cd $SRC/evercrypt/dist/generic
+    cd $SRC/evercrypt/dist/portable
     make -j$(nproc) || true
 
     export CXXFLAGS="$CXXFLAGS -DCRYPTOFUZZ_EVERCRYPT"
-    export EVERCRYPT_A_PATH="$SRC/evercrypt/dist/generic/libevercrypt.a"
+    export EVERCRYPT_A_PATH="$SRC/evercrypt/dist/portable/libevercrypt.a"
     export KREMLIN_A_PATH="$SRC/evercrypt/dist/kremlin/kremlib/dist/minimal/*.o"
     export EVERCRYPT_INCLUDE_PATH="$SRC/evercrypt/dist"
     export KREMLIN_INCLUDE_PATH="$SRC/evercrypt/dist/kremlin/include"
