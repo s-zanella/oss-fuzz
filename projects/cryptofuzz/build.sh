@@ -271,7 +271,7 @@ cp $SRC/cryptofuzz-corpora/boringssl_latest.zip $OUT/cryptofuzz-boringssl-noasm_
 
 ##############################################################################
 cd $SRC;
-unzip OpenSSL_1_1_0-stable.zip
+unzip -q OpenSSL_1_1_0-stable.zip
 
 if [[ $CFLAGS != *sanitize=memory* ]]
 then
@@ -327,7 +327,7 @@ cp $SRC/cryptofuzz/cryptofuzz-dict.txt $OUT/cryptofuzz-openssl-110-noasm.dict
 cp $SRC/cryptofuzz-corpora/openssl_latest.zip $OUT/cryptofuzz-openssl-110-noasm_seed_corpus.zip
 ##############################################################################
 cd $SRC;
-unzip OpenSSL_1_0_2-stable.zip
+unzip -q OpenSSL_1_0_2-stable.zip
 
 if [[ $CFLAGS != *sanitize=memory* ]]
 then
