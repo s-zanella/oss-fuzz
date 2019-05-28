@@ -25,8 +25,6 @@ export INCLUDE_PATH_FLAGS=""
 cd $SRC/cryptofuzz
 python gen_repository.py
 
-cd $SRC/openssl
-
 # This enables runtime checks for C++-specific undefined behaviour.
 export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG"
 
@@ -101,7 +99,7 @@ if [[ $CFLAGS != *sanitize=memory* ]]
 then
     # Compile EverCrypt (with assembly)
     cd $SRC/evercrypt/dist
-    make -C portable -j$(npro) libevercrypt.a
+    make -C portable -j$(nproc) libevercrypt.a
     make -C kremlin/kremlib/dist/minimal -j$(nproc)
 
     export CXXFLAGS="$CXXFLAGS -DCRYPTOFUZZ_EVERCRYPT"
@@ -169,7 +167,7 @@ then
     # Compile Openssl (with assembly)
     cd $SRC/openssl
     ./config --debug enable-md2 enable-rc5
-    make -j$(nproc)
+    make -j$(nproc) build_generated libcrypto.a
 
     # Compile Cryptofuzz OpenSSL (with assembly) module
     cd $SRC/cryptofuzz/modules/openssl
@@ -195,7 +193,7 @@ fi
 cd $SRC/openssl
 ./config --debug no-asm enable-md2 enable-rc5
 make clean
-make -j$(nproc)
+make -j$(nproc) build_generated libcrypto.a
 
 # Compile Cryptofuzz OpenSSL (without assembly) module
 cd $SRC/cryptofuzz/modules/openssl
@@ -245,14 +243,14 @@ then
 fi
 
 ##############################################################################
-# Compile BoringSSL (with assembly)
+# Compile BoringSSL (without assembly)
 cd $SRC/boringssl
 rm -rf build ; mkdir build
 cd build
 cmake -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_C_FLAGS="$CFLAGS" -DBORINGSSL_ALLOW_CXX_RUNTIME=1 -DOPENSSL_NO_ASM=1 ..
 make -j$(nproc) crypto
 
-# Compile Cryptofuzz BoringSSL (with assembly) module
+# Compile Cryptofuzz BoringSSL (without assembly) module
 cd $SRC/cryptofuzz/modules/openssl
 OPENSSL_INCLUDE_PATH="$SRC/boringssl/include" OPENSSL_LIBCRYPTO_A_PATH="$SRC/boringssl/build/crypto/libcrypto.a" CXXFLAGS="$CXXFLAGS -DCRYPTOFUZZ_BORINGSSL" make -B
 
@@ -281,7 +279,7 @@ then
     cd $SRC/openssl-OpenSSL_1_1_0-stable/
     ./config --debug enable-md2 enable-rc5 $CFLAGS
     make depend
-    make -j$(nproc)
+    make -j$(nproc) build_generated libcrypto.a
 
     # Compile Cryptofuzz OpenSSL 1.1.0 (with assembly) module
     cd $SRC/cryptofuzz/modules/openssl
@@ -308,7 +306,7 @@ cd $SRC/openssl-OpenSSL_1_1_0-stable/
 make clean || true
 ./config --debug no-asm enable-md2 enable-rc5 $CFLAGS
 make depend
-make -j$(nproc)
+make -j$(nproc) build_generated libcrypto.a
 
 # Compile Cryptofuzz OpenSSL 1.1.0 (without assembly) module
 cd $SRC/cryptofuzz/modules/openssl
@@ -337,7 +335,7 @@ then
     cd $SRC/openssl-OpenSSL_1_0_2-stable/
     ./config --debug enable-md2 enable-rc5 $CFLAGS
     make depend
-    make -j$(nproc)
+    make -j$(nproc) build_crypto
 
     # Compile Cryptofuzz OpenSSL 1.0.2 (with assembly) module
     cd $SRC/cryptofuzz/modules/openssl
@@ -364,7 +362,7 @@ cd $SRC/openssl-OpenSSL_1_0_2-stable/
 make clean || true
 ./config --debug no-asm enable-md2 enable-rc5 $CFLAGS
 make depend
-make -j$(nproc)
+make -j$(nproc) build_crypto
 
 # Compile Cryptofuzz OpenSSL 1.0.2 (without assembly) module
 cd $SRC/cryptofuzz/modules/openssl
